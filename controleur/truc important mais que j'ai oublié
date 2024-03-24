@@ -1,0 +1,35 @@
+
+DROP TRIGGER IF EXISTS verifdatenaiss;
+DELIMITER $
+CREATE TRIGGER verifdatenaiss
+BEFORE INSERT ON animal
+FOR EACH ROW
+BEGIN
+    IF NEW.datenaissa > CURDATE()
+     THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'erreur de saisie sur la datenaiss';
+    END IF ;
+END $
+
+DELIMITER ;
+
+
+
+DROP TRIGGER IF EXISTS verifdeletevol;
+DELIMITER $
+CREATE TRIGGER verifdeletevol
+BEFORE delete ON affectation
+FOR EACH ROW
+BEGIN
+    IF (old.novol like 'AF%')
+     THEN
+        signal sqlstate'45000'
+        set message_text="ce vol ne peut pas etre supprimer";
+    END IF;
+END $
+
+DELIMITER ;
+
+delete from affectation where novol='Af3218';
+
+
